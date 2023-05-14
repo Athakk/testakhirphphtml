@@ -121,6 +121,11 @@ function query($query)
             $gambar = $gambarLama;
         } else {
             $gambar = upload();
+
+            $result = mysqli_query($mysqli, "SELECT gambar FROM user WHERE id = '$id'");
+            $gambar_unlink = mysqli_fetch_object($result);
+
+            unlink('img/' . $gambar_unlink->gambar);
         }
 
         //password
@@ -149,6 +154,12 @@ function query($query)
 
     function hapus($id){
         global $mysqli;
+
+        //hapus gambar
+        $result = mysqli_query($mysqli, "SELECT gambar FROM user WHERE id = '$id'");
+        $gambar = mysqli_fetch_object($result);
+
+        unlink('img/' . $gambar->gambar);
         mysqli_query($mysqli, "DELETE FROM user WHERE id = $id");
 
         return mysqli_affected_rows($mysqli);
